@@ -1,5 +1,7 @@
 # meilisearch-helper
 
+[![codecov](https://codecov.io/gh/CodyTseng/meilisearch-helper/graph/badge.svg?token=3BNYXXCCJP)](https://codecov.io/gh/CodyTseng/meilisearch-helper)
+
 > A helper library for meilisearch-js that provides convenient utility methods to simplify common operations and enhance your Meilisearch experience.
 
 ## Installation
