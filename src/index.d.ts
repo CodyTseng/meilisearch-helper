@@ -1,22 +1,27 @@
-export type FilterQuery<FilterableAttributes extends string = string> = {
+export type FilterQuery<FilterableAttributes extends string> = {
   [P in FilterableAttributes]?: Condition;
-} & LogicalSelector<FilterableAttributes>;
+} & LogicalSelector<FilterableAttributes> &
+  GeoSelector;
 
-export function buildMeiliSearchFilter<
-  FilterableAttributes extends string = string,
->(
+export function buildMeiliSearchFilter<FilterableAttributes extends string>(
   filterQuery:
     | FilterQuery<FilterableAttributes>
     | FilterQuery<FilterableAttributes>[],
 ): string;
 
-export type Sort<SortableAttributes extends string = string> = {
+export type Sort<SortableAttributes extends string> = {
   [K in SortableAttributes]?: SortDirection;
+} & {
+  _geoPoint?: {
+    lat: number;
+    lng: number;
+    direction?: SortDirection;
+  };
 };
 
-export function buildMeiliSearchSort<
-  SortableAttributes extends string = string,
->(sort: Sort<SortableAttributes>): string[];
+export function buildMeiliSearchSort<SortableAttributes extends string>(
+  sort: Sort<SortableAttributes>,
+): string[];
 
 type ComparisonSelector = {
   $eq?: BaseValueTypes;
@@ -29,6 +34,24 @@ type ComparisonSelector = {
   $nin?: BaseValueTypes[];
   $exists?: boolean;
   $empty?: boolean;
+};
+
+type GeoSelector = {
+  $geoRadius?: {
+    lat: number;
+    lng: number;
+    distanceInMeters: number;
+  };
+  $geoRoundingBox?: {
+    topRight: {
+      lat: number;
+      lng: number;
+    };
+    bottomLeft: {
+      lat: number;
+      lng: number;
+    };
+  };
 };
 
 type LogicalSelector<K extends string> = {

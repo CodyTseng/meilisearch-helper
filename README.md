@@ -23,12 +23,17 @@ type FilterableAttributes = 'name' | 'age' | 'isStudent';
 
 buildMeiliSearchFilter<FilterableAttributes>({
   $or: [
-    { name: 'John', age: { $gt: 18 } },
-    { name: 'Doe', age: { $gt: 20 } },
+    { $or: [{ name: 'John' }, { name: 'Doe' }] },
+    { $and: [{ age: { $gt: 18 } }, { isStudent: true }] },
   ],
-  isStudent: true,
+  age: { $lt: 30 },
+  $geoRadius: {
+    lat: 45.472735,
+    lng: 9.184019,
+    distanceInMeters: 2000,
+  },
 });
-// => (name = "John" AND age > 18 OR name = "Doe" AND age > 20) AND isStudent = true
+// => ((name = "John" OR name = "Doe") OR age > 18 AND isStudent = true) AND age < 30 AND _geoRadius(45.472735, 9.184019, 2000)
 ```
 
 More examples can be found in the [tests](./__test__/filter.test.js).
@@ -47,6 +52,8 @@ Supported operators:
 - `$empty`: Empty - `EMPTY`
 - `$or`: Or - `OR`
 - `$and`: And - `AND`
+- `$geoRadius`: Geo radius - `_geoRadius`
+- `$geoBoundingBox`: Geo bounding box - `_geoBoundingBox`
 
 ### `buildMeiliSearchSort`
 
@@ -60,8 +67,9 @@ type SortableAttributes = 'name' | 'age';
 buildMeiliSearchSort<SortableAttributes>({
   name: 1,
   age: -1,
+  _geoPoint: { lat: 48.8561446, lng: 2.2978204, direction: 1 },
 });
-// => [ "name:asc", "age:desc" ]
+// => [ "name:asc", "age:desc", "_geoPoint(48.8561446, 2.2978204):asc" ]
 ```
 
 More examples can be found in the [tests](./__test__/sort.test.js).

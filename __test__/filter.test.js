@@ -107,6 +107,31 @@ describe('filter', () => {
       buildMeiliSearchFilter({ $or: [{ name: 'John' }, { age: 18 }] }),
     ).toBe('(name = "John" OR age = 18)');
 
+    // geo
+    expect(
+      buildMeiliSearchFilter({
+        $geoRadius: {
+          lat: 45.472735,
+          lng: 9.184019,
+          distanceInMeters: 2000,
+        },
+      }),
+    ).toBe('_geoRadius(45.472735, 9.184019, 2000)');
+    expect(
+      buildMeiliSearchFilter({
+        $geoRoundingBox: {
+          topRight: {
+            lat: 45.494181,
+            lng: 9.214024,
+          },
+          bottomLeft: {
+            lat: 45.449484,
+            lng: 9.179175,
+          },
+        },
+      }),
+    ).toBe('_geoBoundingBox([45.494181, 9.214024], [45.449484, 9.179175])');
+
     // complex
     expect(
       buildMeiliSearchFilter({
@@ -115,9 +140,20 @@ describe('filter', () => {
           { $and: [{ age: { $gt: 18 } }, { isStudent: true }] },
         ],
         age: { $lt: 30 },
+        $geoRadius: {
+          lat: 45.472735,
+          lng: 9.184019,
+          distanceInMeters: 2000,
+        },
       }),
     ).toBe(
-      '((name = "John" OR name = "Doe") OR age > 18 AND isStudent = true) AND age < 30',
+      '((name = "John" OR name = "Doe") OR age > 18 AND isStudent = true) AND age < 30 AND _geoRadius(45.472735, 9.184019, 2000)',
+    );
+  });
+
+  it('some special cases', () => {
+    expect(buildMeiliSearchFilter({ name: undefined, age: { $gt: 18 } })).toBe(
+      'age > 18',
     );
   });
 
@@ -143,11 +179,14 @@ describe('filter', () => {
     expect(() => buildMeiliSearchFilter({ $and: 'a' })).toThrow(
       '$and must be an array',
     );
-  });
-
-  it('some special cases', () => {
-    expect(buildMeiliSearchFilter({ name: undefined, age: { $gt: 18 } })).toBe(
-      'age > 18',
+    expect(() => buildMeiliSearchFilter({ $geoRadius: 'a' })).toThrow(
+      '$geoRadius must be an object',
+    );
+    expect(() => buildMeiliSearchFilter({ $geoRoundingBox: 'a' })).toThrow(
+      '$geoBoundingBox must be an object',
+    );
+    expect(() => buildMeiliSearchFilter({ $geoRadius: { lat: 'a' } })).toThrow(
+      '$geoRadius.lat must be a number',
     );
   });
 });

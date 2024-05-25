@@ -5,6 +5,7 @@ const {
   isArray,
   isDate,
   checkIsNumberOrDate,
+  checkIsNumber,
 } = require('./utils');
 
 function buildMeiliSearchFilter(filterQuery) {
@@ -27,6 +28,12 @@ function buildMeiliSearchFilter(filterQuery) {
       case '$and':
         filters.push(parseAndSelector(condition));
         break;
+      case '$geoRadius':
+        filters.push(parseGeoRadiusSelector(condition));
+        break;
+      case '$geoRoundingBox':
+        filters.push(parseGeoBoundingBoxSelector(condition));
+        break;
       default:
         filters.push(parseQuerySelector(field, condition));
     }
@@ -44,6 +51,37 @@ function parseOrSelector(filterQueries) {
 function parseAndSelector(filterQueries) {
   checkIsArray(filterQueries, '$and must be an array');
   return filterQueries.map((f) => buildMeiliSearchFilter(f)).join(' AND ');
+}
+
+function parseGeoRadiusSelector(condition) {
+  checkIsObject(condition, '$geoRadius must be an object');
+
+  const { lat, lng, distanceInMeters } = condition;
+  checkIsNumber(lat, '$geoRadius.lat must be a number');
+  checkIsNumber(lng, '$geoRadius.lng must be a number');
+  checkIsNumber(
+    distanceInMeters,
+    '$geoRadius.distanceInMeters must be a number',
+  );
+
+  return `_geoRadius(${lat}, ${lng}, ${distanceInMeters})`;
+}
+
+function parseGeoBoundingBoxSelector(condition) {
+  checkIsObject(condition, '$geoBoundingBox must be an object');
+
+  const { topRight, bottomLeft } = condition;
+  checkIsObject(topRight, '$geoBoundingBox.topRight must be an object');
+  checkIsObject(bottomLeft, '$geoBoundingBox.bottomLeft must be an object');
+
+  const { lat: lat1, lng: lng1 } = topRight;
+  const { lat: lat2, lng: lng2 } = bottomLeft;
+  checkIsNumber(lat1, '$geoBoundingBox.topRight.lat must be a number');
+  checkIsNumber(lng1, '$geoBoundingBox.topRight.lng must be a number');
+  checkIsNumber(lat2, '$geoBoundingBox.bottomLeft.lat must be a number');
+  checkIsNumber(lng2, '$geoBoundingBox.bottomLeft.lng must be a number');
+
+  return `_geoBoundingBox([${lat1}, ${lng1}], [${lat2}, ${lng2}])`;
 }
 
 function parseQuerySelector(field, condition) {

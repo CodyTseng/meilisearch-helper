@@ -16,6 +16,18 @@ describe('sort', () => {
       'name:desc',
     ]);
 
+    // geoPoint
+    expect(
+      buildMeiliSearchSort({
+        _geoPoint: { lat: 48.8561446, lng: 2.2978204, direction: 1 },
+      }),
+    ).toStrictEqual(['_geoPoint(48.8561446, 2.2978204):asc']);
+    expect(
+      buildMeiliSearchSort({
+        _geoPoint: { lat: 48.8561446, lng: 2.2978204 },
+      }),
+    ).toStrictEqual(['_geoPoint(48.8561446, 2.2978204):asc']);
+
     // multiple fields
     expect(buildMeiliSearchSort({ name: 1, age: -1 })).toStrictEqual([
       'name:asc',
