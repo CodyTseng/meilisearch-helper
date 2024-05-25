@@ -3,12 +3,20 @@
   "version": "0.0.1",
   "description": "A helper library for meilisearch-js that provides convenient utility methods to simplify common operations and enhance your Meilisearch experience.",
   "author": "codytseng",
+  "homepage": "https://github.com/CodyTseng/meilisearch-helper",
   "license": "MIT",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "files": [
     "src"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodyTseng/meilisearch-helper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CodyTseng/meilisearch-helper/issues"
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint src",
