@@ -1,6 +1,6 @@
 {
   "name": "meilisearch-helper",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A helper library for meilisearch-js that provides convenient utility methods to simplify common operations and enhance your Meilisearch experience.",
   "author": "codytseng",
   "homepage": "https://github.com/CodyTseng/meilisearch-helper",
