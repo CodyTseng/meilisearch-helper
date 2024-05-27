@@ -46,6 +46,14 @@ describe('filter', () => {
     expect(buildMeiliSearchFilter({ birth: { $gt: date } })).toBe(
       `birth > ${timestamp}`,
     );
+    expect(
+      buildMeiliSearchFilter({
+        age: {
+          $gt: 18,
+          $lt: undefined, // should be ignored
+        },
+      }),
+    ).toBe('age > 18');
 
     // greater than or equal
     expect(buildMeiliSearchFilter({ age: { $gte: 18 } })).toBe('age >= 18');

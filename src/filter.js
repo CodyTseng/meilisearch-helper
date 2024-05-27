@@ -94,6 +94,7 @@ function parseQuerySelector(field, condition) {
   }
 
   return Object.entries(condition)
+    .filter(([, value]) => value !== undefined)
     .map(([operator, value]) => translateOperator(field, operator, value))
     .join(' AND ');
 }
