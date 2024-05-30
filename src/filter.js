@@ -23,37 +23,37 @@ function buildMeiliSearchFilter(filterQuery) {
 
     switch (field) {
       case '$or':
-        filters.push(parseOrSelector(condition));
+        filters.push(formatOrGroup(condition));
         break;
       case '$and':
-        filters.push(parseAndSelector(condition));
+        filters.push(formatAndGroup(condition));
         break;
       case '$geoRadius':
-        filters.push(parseGeoRadiusSelector(condition));
+        filters.push(formatGeoRadiusCondition(condition));
         break;
       case '$geoRoundingBox':
-        filters.push(parseGeoBoundingBoxSelector(condition));
+        filters.push(formatGeoBoundingBoxCondition(condition));
         break;
       default:
-        filters.push(parseQuerySelector(field, condition));
+        filters.push(parseComparisonConditions(field, condition));
     }
   }
   return filters.join(' AND ');
 }
 
-function parseOrSelector(filterQueries) {
+function formatOrGroup(filterQueries) {
   checkIsArray(filterQueries, '$or must be an array');
   return `(${filterQueries
     .map((f) => buildMeiliSearchFilter(f))
     .join(' OR ')})`;
 }
 
-function parseAndSelector(filterQueries) {
+function formatAndGroup(filterQueries) {
   checkIsArray(filterQueries, '$and must be an array');
   return filterQueries.map((f) => buildMeiliSearchFilter(f)).join(' AND ');
 }
 
-function parseGeoRadiusSelector(condition) {
+function formatGeoRadiusCondition(condition) {
   checkIsObject(condition, '$geoRadius must be an object');
 
   const { lat, lng, distanceInMeters } = condition;
@@ -67,7 +67,7 @@ function parseGeoRadiusSelector(condition) {
   return `_geoRadius(${lat}, ${lng}, ${distanceInMeters})`;
 }
 
-function parseGeoBoundingBoxSelector(condition) {
+function formatGeoBoundingBoxCondition(condition) {
   checkIsObject(condition, '$geoBoundingBox must be an object');
 
   const { topRight, bottomLeft } = condition;
@@ -84,95 +84,97 @@ function parseGeoBoundingBoxSelector(condition) {
   return `_geoBoundingBox([${lat1}, ${lng1}], [${lat2}, ${lng2}])`;
 }
 
-function parseQuerySelector(field, condition) {
+function parseComparisonConditions(field, condition) {
   if (!isObject(condition) || isDate(condition)) {
-    return translateOperator(field, '$eq', condition);
+    return formatComparisonCondition(field, '$eq', condition);
   }
 
   if (isArray(condition)) {
-    return translateOperator(field, '$in', condition);
+    return formatComparisonCondition(field, '$in', condition);
   }
 
   return Object.entries(condition)
     .filter(([, value]) => value !== undefined)
-    .map(([operator, value]) => translateOperator(field, operator, value))
+    .map(([operator, value]) =>
+      formatComparisonCondition(field, operator, value),
+    )
     .join(' AND ');
 }
 
-function translateOperator(field, operator, value) {
+function formatComparisonCondition(field, operator, value) {
   switch (operator) {
     case '$eq':
-      return translateEqualOperator(field, value);
+      return formatEqualCondition(field, value);
     case '$ne':
-      return translateNotEqualOperator(field, value);
+      return formatNotEqualCondition(field, value);
     case '$gt':
-      return translateGreaterThanOperator(field, value);
+      return formatGreaterThanCondition(field, value);
     case '$gte':
-      return translateGreaterThanOrEqualOperator(field, value);
+      return formatGreaterThanOrEqualCondition(field, value);
     case '$lt':
-      return translateLessThanOperator(field, value);
+      return formatLessThanCondition(field, value);
     case '$lte':
-      return translateLessThanOrEqualOperator(field, value);
+      return formatLessThanOrEqualCondition(field, value);
     case '$in':
-      return translateInOperator(field, value);
+      return formatInCondition(field, value);
     case '$nin':
-      return translateNotInOperator(field, value);
+      return formatNotInCondition(field, value);
     case '$exists':
-      return translateExistsOperator(field, value);
+      return formatExistsCondition(field, value);
     case '$empty':
-      return translateEmptyOperator(field, value);
+      return formatEmptyCondition(field, value);
     default:
       throw new Error(`Unsupported operator: ${operator}`);
   }
 }
 
-function translateEqualOperator(field, value) {
+function formatEqualCondition(field, value) {
   return value === null
     ? `${field} IS NULL`
     : `${field} = ${serializeValue(value)}`;
 }
 
-function translateNotEqualOperator(field, value) {
+function formatNotEqualCondition(field, value) {
   return value === null
     ? `${field} IS NOT NULL`
     : `${field} != ${serializeValue(value)}`;
 }
 
-function translateGreaterThanOperator(field, value) {
+function formatGreaterThanCondition(field, value) {
   checkIsNumberOrDate(value, '$gt must be a number or a date');
   return `${field} > ${serializeValue(value)}`;
 }
 
-function translateGreaterThanOrEqualOperator(field, value) {
+function formatGreaterThanOrEqualCondition(field, value) {
   checkIsNumberOrDate(value, '$gte must be a number or a date');
   return `${field} >= ${serializeValue(value)}`;
 }
 
-function translateLessThanOperator(field, value) {
+function formatLessThanCondition(field, value) {
   checkIsNumberOrDate(value, '$lt must be a number or a date');
   return `${field} < ${serializeValue(value)}`;
 }
 
-function translateLessThanOrEqualOperator(field, value) {
+function formatLessThanOrEqualCondition(field, value) {
   checkIsNumberOrDate(value, '$lte must be a number or a date');
   return `${field} <= ${serializeValue(value)}`;
 }
 
-function translateInOperator(field, value) {
+function formatInCondition(field, value) {
   checkIsArray(value, '$in must be an array');
   return `${field} IN [${value.map((v) => serializeValue(v)).join(', ')}]`;
 }
 
-function translateNotInOperator(field, value) {
+function formatNotInCondition(field, value) {
   checkIsArray(value, '$nin must be an array');
   return `${field} NOT IN [${value.map((v) => serializeValue(v)).join(', ')}]`;
 }
 
-function translateExistsOperator(field, value) {
+function formatExistsCondition(field, value) {
   return value ? `${field} EXISTS` : `${field} NOT EXISTS`;
 }
 
-function translateEmptyOperator(field, value) {
+function formatEmptyCondition(field, value) {
   return value ? `${field} IS EMPTY` : `${field} IS NOT EMPTY`;
 }
 

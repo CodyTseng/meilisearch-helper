@@ -1,7 +1,7 @@
 export type FilterQuery<FilterableAttributes extends string> = {
   [P in FilterableAttributes]?: Condition;
-} & LogicalSelector<FilterableAttributes> &
-  GeoSelector;
+} & LogicalCondition<FilterableAttributes> &
+  GeoCondition;
 
 export function buildMeiliSearchFilter<FilterableAttributes extends string>(
   filterQuery:
@@ -23,7 +23,7 @@ export function buildMeiliSearchSort<SortableAttributes extends string>(
   sort: Sort<SortableAttributes>,
 ): string[];
 
-type ComparisonSelector = {
+type ComparisonCondition = {
   $eq?: BaseValueTypes;
   $ne?: BaseValueTypes;
   $gt?: ComparableValueTypes;
@@ -36,7 +36,7 @@ type ComparisonSelector = {
   $empty?: boolean;
 };
 
-type GeoSelector = {
+type GeoCondition = {
   $geoRadius?: {
     lat: number;
     lng: number;
@@ -54,7 +54,7 @@ type GeoSelector = {
   };
 };
 
-type LogicalSelector<K extends string> = {
+type LogicalCondition<K extends string> = {
   $or?: FilterQuery<K>[];
   $and?: FilterQuery<K>[];
 };
@@ -62,6 +62,6 @@ type LogicalSelector<K extends string> = {
 type BaseValueTypes = string | number | boolean | Date | null;
 type ComparableValueTypes = number | Date;
 
-type Condition = BaseValueTypes | BaseValueTypes[] | ComparisonSelector;
+type Condition = BaseValueTypes | BaseValueTypes[] | ComparisonCondition;
 
 type SortDirection = 1 | -1 | 'asc' | 'desc' | 'ascending' | 'descending';
