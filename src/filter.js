@@ -104,24 +104,34 @@ function parseComparisonConditions(field, condition) {
 function formatComparisonCondition(field, operator, value) {
   switch (operator) {
     case '$eq':
+    case '=':
       return formatEqualCondition(field, value);
     case '$ne':
+    case '!=':
       return formatNotEqualCondition(field, value);
     case '$gt':
+    case '>':
       return formatGreaterThanCondition(field, value);
     case '$gte':
+    case '>=':
       return formatGreaterThanOrEqualCondition(field, value);
     case '$lt':
+    case '<':
       return formatLessThanCondition(field, value);
     case '$lte':
+    case '<=':
       return formatLessThanOrEqualCondition(field, value);
     case '$in':
+    case 'in':
       return formatInCondition(field, value);
     case '$nin':
+    case 'nin':
       return formatNotInCondition(field, value);
     case '$exists':
+    case 'exists':
       return formatExistsCondition(field, value);
     case '$empty':
+    case 'empty':
       return formatEmptyCondition(field, value);
     default:
       throw new Error(`Unsupported operator: ${operator}`);
@@ -185,4 +195,9 @@ function serializeValue(value) {
   return JSON.stringify(value);
 }
 
-module.exports = { buildMeiliSearchFilter };
+module.exports = {
+  buildMeiliSearchFilter,
+  formatComparisonCondition,
+  formatGeoRadiusCondition,
+  formatGeoBoundingBoxCondition,
+};
