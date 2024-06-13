@@ -23,6 +23,48 @@ export function buildMeiliSearchSort<SortableAttributes extends string>(
   sort: Sort<SortableAttributes>,
 ): string[];
 
+export class MeiliSearchFilterBuilder<FilterableAttributes extends string> {
+  where(
+    lhs: FilterableAttributes,
+    operator: FilterBuilderOperator,
+    rhs: BaseValueTypes,
+  ): this;
+  where(
+    expressionFunction: (
+      expressionBuilder: ExpressionBuilder<FilterableAttributes>,
+    ) => string,
+  ): this;
+
+  build(): string;
+}
+
+interface ExpressionBuilder<FilterableAttributes extends string> {
+  (
+    lhs: FilterableAttributes,
+    operator: FilterBuilderOperator,
+    rhs: BaseValueTypes,
+  ): string;
+  or(expressions: string[]): string;
+  and(expressions: string[]): string;
+  geoRadius(lat: number, lng: number, distanceInMeters: number): string;
+  geoBoundingBox(
+    topRight: { lat: number; lng: number },
+    bottomLeft: { lat: number; lng: number },
+  ): string;
+}
+
+type FilterBuilderOperator =
+  | '='
+  | '!='
+  | '>'
+  | '>='
+  | '<'
+  | '<='
+  | 'in'
+  | 'nin'
+  | 'exists'
+  | 'empty';
+
 type ComparisonCondition = {
   $eq?: BaseValueTypes;
   $ne?: BaseValueTypes;

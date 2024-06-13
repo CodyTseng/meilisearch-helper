@@ -18,6 +18,10 @@ function isNumberOrDate(obj) {
   return typeof obj === 'number' || isDate(obj);
 }
 
+function isFunction(fn) {
+  return typeof fn === 'function';
+}
+
 function checkIsObject(obj, errMsg) {
   if (isObject(obj)) {
     return;
@@ -50,6 +54,7 @@ module.exports = {
   isObject,
   isArray,
   isDate,
+  isFunction,
   checkIsObject,
   checkIsArray,
   checkIsNumber,
