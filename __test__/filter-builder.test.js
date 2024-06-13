@@ -77,7 +77,9 @@ describe('filter-builder', () => {
         .where('age', '<', 30)
         .where((eb) => eb.geoRadius(45.472735, 9.184019, 2000))
         .build(),
-    ).toBe('((name = "John" OR name = "Doe") OR age > 18 AND isStudent = true) AND age < 30 AND _geoRadius(45.472735, 9.184019, 2000)')
+    ).toBe(
+      '((name = "John" OR name = "Doe") OR age > 18 AND isStudent = true) AND age < 30 AND _geoRadius(45.472735, 9.184019, 2000)',
+    );
   });
 
   it('should throw an error when invalid arguments are passed', () => {
