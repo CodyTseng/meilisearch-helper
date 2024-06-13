@@ -123,11 +123,38 @@ console.log(filter);
 
 `eb` (expression builder): A function to build a simple filter expression.
 
-- `eb(lhs: FilterableAttributes, operator: FilterBuilderOperator, rhs: BaseValueTypes): string`: Build a simple filter expression, e.g. `eb('age', '>', 18)` => `age > 18`
-- `eb.or(expressions: string[]): string`: Combine multiple expressions with `OR`, e.g. `eb.or([eb('age', '>', 18), 'isStudent = true'])` => `(age > 18 OR isStudent = true)`
-- `eb.and(expressions: string[]): string`: Combine multiple expressions with `AND`, e.g. `eb.and([eb('age', '>', 18), 'isStudent = true'])` => `age > 18 AND isStudent = true`
-- `eb.geoRadius(lat: number, lng: number, distanceInMeters: number): string`: Build a geo radius filter expression, e.g. `eb.geoRadius(45.472735, 9.184019, 2000)` => `_geoRadius(45.472735, 9.184019, 2000)`
-- `eb.geoBoundingBox(topRight: { lat: number; lng: number }, bottomLeft: { lat: number; lng: number }): string`: Build a geo bounding box filter expression, e.g. `eb.geoBoundingBox({ lat: 45.472735, lng: 9.184019 }, { lat: 45.472735, lng: 9.184019 })` => `_geoBoundingBox([45.472735, 9.184019], [45.472735, 9.184019])`
+- `eb(lhs: FilterableAttributes, operator: FilterBuilderOperator, rhs: BaseValueTypes): string`: Build a simple filter expression.
+
+```typescript
+eb('age', '>', 18); // => age > 18
+```
+
+- `eb.or(expressions: string[]): string`: Combine multiple expressions with `OR`.
+
+```typescript
+eb.or([eb('age', '>', 18), 'isStudent = true']); // => (age > 18 OR isStudent = true)
+```
+
+- `eb.and(expressions: string[]): string`: Combine multiple expressions with `AND`
+
+```typescript
+eb.and([eb('age', '>', 18), 'isStudent = true']); // => age > 18 AND isStudent = true
+```
+
+- `eb.geoRadius(lat: number, lng: number, distanceInMeters: number): string`: Build a geo radius filter expression.
+
+```typescript
+eb.geoRadius(45.472735, 9.184019, 2000); // => _geoRadius(45.472735, 9.184019, 2000)
+```
+
+- `eb.geoBoundingBox(topRight: { lat: number; lng: number }, bottomLeft: { lat: number; lng: number }): string`: Build a geo bounding box filter expression.
+
+```typescript
+eb.geoBoundingBox(
+  { lat: 45.472735, lng: 19.184019 },
+  { lat: 25.472735, lng: 9.184019 },
+); // => _geoBoundingBox([45.472735, 19.184019], [25.472735, 9.184019])
+```
 
 supported operators:
 
