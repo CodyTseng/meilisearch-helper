@@ -64,6 +64,20 @@ describe('filter-builder', () => {
         )
         .build(),
     ).toBe('_geoBoundingBox([45.494181, 9.214024], [45.449484, 9.179175])');
+
+    // complex
+    expect(
+      builder
+        .where((eb) =>
+          eb.or([
+            eb.or([eb('name', '=', 'John'), eb('name', '=', 'Doe')]),
+            eb.and([eb('age', '>', 18), eb('isStudent', '=', true)]),
+          ]),
+        )
+        .where('age', '<', 30)
+        .where((eb) => eb.geoRadius(45.472735, 9.184019, 2000))
+        .build(),
+    ).toBe('((name = "John" OR name = "Doe") OR age > 18 AND isStudent = true) AND age < 30 AND _geoRadius(45.472735, 9.184019, 2000)')
   });
 
   it('should throw an error when invalid arguments are passed', () => {
