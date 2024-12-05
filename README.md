@@ -20,7 +20,7 @@ There are two ways to build a [MeiliSearch filter](https://www.meilisearch.com/d
 2. Use the `MeiliSearchFilterBuilder` class to build a filter with a fluent API.
 
 > Note:
-> `CONTAINS` and `STARTS WITH` are experimental features. You need to use the experimental features endpoint to enable them. More details can be found in the [MeiliSearch documentation](https://www.meilisearch.com/docs/learn/filtering_and_sorting/filter_expression_reference#contains).
+> `CONTAINS` and `STARTS WITH` are experimental features. Use the experimental features endpoint to enable them. More details can be found in the [MeiliSearch documentation](https://www.meilisearch.com/docs/learn/filtering_and_sorting/filter_expression_reference#contains).
 
 #### `buildMeiliSearchFilter`
 
@@ -48,25 +48,48 @@ console.log(filter);
 
 Supported operators:
 
-- `$eq`: Equal, e.g. `{ name: { $eq: 'John' } }` => `name = "John"` or `{ name: 'John' }` => `name = "John"`
-- `$ne`: Not equal, e.g. `{ name: { $ne: 'John' } }` => `name != "John"`
-- `$gt`: Greater than, e.g. `{ age: { $gt: 18 } }` => `age > 18`
-- `$gte`: Greater than or equal, e.g. `{ age: { $gte: 18 } }` => `age >= 18`
-- `$lt`: Less than, e.g. `{ age: { $lt: 18 } }` => `age < 18`
-- `$lte`: Less than or equal, e.g. `{ age: { $lte: 18 } }` => `age <= 18`
-- `$in`: In, e.g. `{ name: { $in: ['John', 'Doe'] } }` => `name IN ["John", "Doe"]` or `{ name: ['John', 'Doe'] }` => `name IN ["John", "Doe"]`
-- `$nin`: Not in, e.g. `{ name: { $nin: ['John', 'Doe'] } }` => `name NOT IN ["John", "Doe"]`
-- `$exists`: Exists, e.g. `{ name: { $exists: true } }` => `name EXISTS` or `{ name: { $exists: false } }` => `name NOT EXISTS`
-- `$empty`: Empty, e.g. `{ name: { $empty: true } }` => `name IS EMPTY` or `{ name: { $empty: false } }` => `name IS NOT EMPTY`
-- `$between`: Between, e.g. `{ age: { $between: [18, 30] } }` => `age 18 TO 30`
-- `$contains`: (Experimental) Contains, e.g. `{ name: { $contains: 'John' } }` => `name CONTAINS "John"`
-- `$notContains`: (Experimental) Not contains, e.g. `{ name: { $notContains: 'John' } }` => `name NOT CONTAINS "John"`
-- `$startsWith`: (Experimental) Starts with, e.g. `{ name: { $startsWith: 'John' } }` => `name STARTS WITH "John"`
-- `$notStartsWith`: (Experimental) Not starts with, e.g. `{ name: { $notStartsWith: 'John' } }` => `name NOT STARTS WITH "John"`
-- `$or`: Or, e.g. `{ $or: [{ name: 'John' }, { name: 'Doe' }] }` => `(name = "John" OR name = "Doe")`
-- `$and`: And, e.g. `{ $and: [{ age: { $gt: 18 } }, { isStudent: true }] }` => `age > 18 AND isStudent = true`
-- `$geoRadius`: Geo radius, e.g. `{ $geoRadius: { lat: 45.472735, lng: 9.184019, distanceInMeters: 2000 } }` => `_geoRadius(45.472735, 9.184019, 2000)`
-- `$geoBoundingBox`: Geo bounding box, e.g. `{ $geoBoundingBox: { topRight: { lat: 45.472735, lng: 9.184019 }, bottomLeft: { lat: 45.472735, lng: 9.184019 } } }` => `_geoBoundingBox([45.472735, 9.184019], [45.472735, 9.184019])`
+- `$eq`: Equal, e.g.
+  - `{ name: { $eq: 'John' } }` => `name = "John"`
+  - `{ name: 'John' }` => `name = "John"`
+- `$ne`: Not equal, e.g.
+  - `{ name: { $ne: 'John' } }` => `name != "John"`
+- `$gt`: Greater than, e.g.
+  - `{ age: { $gt: 18 } }` => `age > 18`
+- `$gte`: Greater than or equal, e.g.
+  - `{ age: { $gte: 18 } }` => `age >= 18`
+- `$lt`: Less than, e.g.
+  - `{ age: { $lt: 18 } }` => `age < 18`
+- `$lte`: Less than or equal, e.g.
+  - `{ age: { $lte: 18 } }` => `age <= 18`
+- `$in`: In, e.g.
+  - `{ name: { $in: ['John', 'Doe'] } }` => `name IN ["John", "Doe"]`
+  - `{ name: ['John', 'Doe'] }` => `name IN ["John", "Doe"]`
+- `$nin`: Not in, e.g.
+  - `{ name: { $nin: ['John', 'Doe'] } }` => `name NOT IN ["John", "Doe"]`
+- `$exists`: Exists, e.g.
+  - `{ name: { $exists: true } }` => `name EXISTS`
+  - `{ name: { $exists: false } }` => `name NOT EXISTS`
+- `$empty`: Empty, e.g.
+  - `{ name: { $empty: true } }` => `name IS EMPTY`
+  - `{ name: { $empty: false } }` => `name IS NOT EMPTY`
+- `$between`: Between, e.g.
+  - `{ age: { $between: [18, 30] } }` => `age 18 TO 30`
+- `$contains`: (Experimental) Contains, e.g.
+  - `{ name: { $contains: 'John' } }` => `name CONTAINS "John"`
+- `$notContains`: (Experimental) Not contains, e.g.
+  - `{ name: { $notContains: 'John' } }` => `name NOT CONTAINS "John"`
+- `$startsWith`: (Experimental) Starts with, e.g.
+  - `{ name: { $startsWith: 'John' } }` => `name STARTS WITH "John"`
+- `$notStartsWith`: (Experimental) Not starts with, e.g.
+  - `{ name: { $notStartsWith: 'John' } }` => `name NOT STARTS WITH "John"`
+- `$or`: Or, e.g.
+  - `{ $or: [{ name: 'John' }, { name: 'Doe' }] }` => `(name = "John" OR name = "Doe")`
+- `$and`: And, e.g.
+  - `{ $and: [{ age: { $gt: 18 } }, { isStudent: true }] }` => `age > 18 AND isStudent = true`
+- `$geoRadius`: Geo radius, e.g.
+  - `{ $geoRadius: { lat: 45.472735, lng: 9.184019, distanceInMeters: 2000 } }` => `_geoRadius(45.472735, 9.184019, 2000)`
+- `$geoBoundingBox`: Geo bounding box, e.g.
+  - `{ $geoBoundingBox: { topRight: { lat: 45.472735, lng: 9.184019 }, bottomLeft: { lat: 45.472735, lng: 9.184019 } } }` => `_geoBoundingBox([45.472735, 9.184019], [45.472735, 9.184019])`
 
 More examples can be found in the [tests](./__test__/filter.test.js).
 
@@ -166,21 +189,36 @@ eb.geoBoundingBox(
 
 supported operators:
 
-- `=`: Equal, e.g. `.where('name', '=', 'John')` => `name = "John"`
-- `!=`: Not equal, e.g. `.where('name', '!=', 'John')` => `name != "John"`
-- `>`: Greater than, e.g. `.where('age', '>', 18)` => `age > 18`
-- `>=`: Greater than or equal, e.g. `.where('age', '>=', 18)` => `age >= 18`
-- `<`: Less than, e.g. `.where('age', '<', 18)` => `age < 18`
-- `<=`: Less than or equal, e.g. `.where('age', '<=', 18)` => `age <= 18`
-- `in`: In, e.g. `.where('name', 'in', ['John', 'Doe'])` => `name IN ["John", "Doe"]`
-- `nin`: Not in, e.g. `.where('name', 'nin', ['John', 'Doe'])` => `name NOT IN ["John", "Doe"]`
-- `exists`: Exists, e.g. `.where('name', 'exists', true)` => `name EXISTS` or `.where('name', 'exists', false)` => `name NOT EXISTS`
-- `empty`: Empty, e.g. `.where('name', 'empty', true)` => `name IS EMPTY` or `.where('name', 'empty', false)` => `name IS NOT EMPTY`
-- `between`: Between, e.g. `.where('age', 'between', [18, 30])` => `age 18 TO 30`
-- `contains`: (Experimental) Contains, e.g. `.where('name', 'contains', 'John')` => `name CONTAINS "John"`
-- `notContains`: (Experimental) Not contains, e.g. `.where('name', 'notContains', 'John')` => `name NOT CONTAINS "John"`
-- `startsWith`: (Experimental) Starts with, e.g. `.where('name', 'startsWith', 'John')` => `name STARTS WITH "John"`
-- `notStartsWith`: (Experimental) Not starts with, e.g. `.where('name', 'notStartsWith', 'John')` => `name NOT STARTS WITH "John"`
+- `=`: Equal, e.g.
+  - `.where('name', '=', 'John')` => `name = "John"`
+- `!=`: Not equal, e.g.
+  - `.where('name', '!=', 'John')` => `name != "John"`
+- `>`: Greater than, e.g.
+  - `.where('age', '>', 18)` => `age > 18`
+- `>=`: Greater than or equal, e.g.
+  - `.where('age', '>=', 18)` => `age >= 18`
+- `<`: Less than, e.g.
+  - `.where('age', '<', 18)` => `age < 18`
+- `<=`: Less than or equal, e.g.
+  - `.where('age', '<=', 18)` => `age <= 18`
+- `in`: In, e.g.
+  - `.where('name', 'in', ['John', 'Doe'])` => `name IN ["John", "Doe"]`
+- `nin`: Not in, e.g.
+  - `.where('name', 'nin', ['John', 'Doe'])` => `name NOT IN ["John", "Doe"]`
+- `exists`: Exists, e.g.
+  - `.where('name', 'exists', true)` => `name EXISTS` or `.where('name', 'exists', false)` => `name NOT EXISTS`
+- `empty`: Empty, e.g.
+  - `.where('name', 'empty', true)` => `name IS EMPTY` or `.where('name', 'empty', false)` => `name IS NOT EMPTY`
+- `between`: Between, e.g.
+  - `.where('age', 'between', [18, 30])` => `age 18 TO 30`
+- `contains`: (Experimental) Contains, e.g.
+  - `.where('name', 'contains', 'John')` => `name CONTAINS "John"`
+- `notContains`: (Experimental) Not contains, e.g.
+  - `.where('name', 'notContains', 'John')` => `name NOT CONTAINS "John"`
+- `startsWith`: (Experimental) Starts with, e.g.
+  - `.where('name', 'startsWith', 'John')` => `name STARTS WITH "John"`
+- `notStartsWith`: (Experimental) Not starts with, e.g.
+  - `.where('name', 'notStartsWith', 'John')` => `name NOT STARTS WITH "John"`
 
 More examples can be found in the [tests](./__test__/filter-builder.test.js).
 
