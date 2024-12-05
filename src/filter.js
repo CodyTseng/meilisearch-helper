@@ -143,6 +143,12 @@ function formatComparisonCondition(field, operator, value) {
     case '$notContains':
     case 'notContains':
       return formatNotContainsCondition(field, value);
+    case '$startsWith':
+    case 'startsWith':
+      return formatStartsWithCondition(field, value);
+    case '$notStartsWith':
+    case 'notStartsWith':
+      return formatNotStartsWithCondition(field, value);
     default:
       throw new Error(`Unsupported operator: ${operator}`);
   }
@@ -217,6 +223,16 @@ function formatContainsCondition(field, value) {
 function formatNotContainsCondition(field, value) {
   checkIsString(value, '$notContains must be a string');
   return `${field} NOT CONTAINS ${serializeValue(value)}`;
+}
+
+function formatStartsWithCondition(field, value) {
+  checkIsString(value, '$startsWith must be a string');
+  return `${field} STARTS WITH ${serializeValue(value)}`;
+}
+
+function formatNotStartsWithCondition(field, value) {
+  checkIsString(value, '$notStartsWith must be a string');
+  return `${field} NOT STARTS WITH ${serializeValue(value)}`;
 }
 
 function serializeValue(value) {

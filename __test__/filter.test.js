@@ -124,6 +124,14 @@ describe('filter', () => {
       'name NOT CONTAINS "John"',
     );
 
+    // startsWith
+    expect(buildMeiliSearchFilter({ name: { $startsWith: 'John' } })).toBe(
+      'name STARTS WITH "John"',
+    );
+    expect(buildMeiliSearchFilter({ name: { $notStartsWith: 'John' } })).toBe(
+      'name NOT STARTS WITH "John"',
+    );
+
     // or
     expect(
       buildMeiliSearchFilter({ $or: [{ name: 'John' }, { age: 18 }] }),
@@ -210,6 +218,12 @@ describe('filter', () => {
     expect(() => buildMeiliSearchFilter({ name: { $notContains: 1 } })).toThrow(
       '$notContains must be a string',
     );
+    expect(() => buildMeiliSearchFilter({ name: { $startsWith: 1 } })).toThrow(
+      '$startsWith must be a string',
+    );
+    expect(() =>
+      buildMeiliSearchFilter({ name: { $notStartsWith: 1 } }),
+    ).toThrow('$notStartsWith must be a string');
     expect(() => buildMeiliSearchFilter({ $or: 'a' })).toThrow(
       '$or must be an array',
     );

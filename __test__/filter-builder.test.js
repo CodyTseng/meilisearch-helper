@@ -35,6 +35,12 @@ describe('filter-builder', () => {
     expect(builder.where('name', 'notContains', 'John').build()).toBe(
       'name NOT CONTAINS "John"',
     );
+    expect(builder.where('name', 'startsWith', 'John').build()).toBe(
+      'name STARTS WITH "John"',
+    );
+    expect(builder.where('name', 'notStartsWith', 'John').build()).toBe(
+      'name NOT STARTS WITH "John"',
+    );
 
     // and
     expect(

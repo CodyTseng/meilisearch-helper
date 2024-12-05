@@ -19,6 +19,9 @@ There are two ways to build a [MeiliSearch filter](https://www.meilisearch.com/d
 1. Use the `buildMeiliSearchFilter` function to build a filter from a MongoDB-style filter object.
 2. Use the `MeiliSearchFilterBuilder` class to build a filter with a fluent API.
 
+> Note:
+> `CONTAINS` and `STARTS WITH` are experimental features. You need to use the experimental features endpoint to enable them. More details can be found in the [MeiliSearch documentation](https://www.meilisearch.com/docs/learn/filtering_and_sorting/filter_expression_reference#contains).
+
 #### `buildMeiliSearchFilter`
 
 ```typescript
@@ -58,6 +61,8 @@ Supported operators:
 - `$between`: Between, e.g. `{ age: { $between: [18, 30] } }` => `age 18 TO 30`
 - `$contains`: (Experimental) Contains, e.g. `{ name: { $contains: 'John' } }` => `name CONTAINS "John"`
 - `$notContains`: (Experimental) Not contains, e.g. `{ name: { $notContains: 'John' } }` => `name NOT CONTAINS "John"`
+- `$startsWith`: (Experimental) Starts with, e.g. `{ name: { $startsWith: 'John' } }` => `name STARTS WITH "John"`
+- `$notStartsWith`: (Experimental) Not starts with, e.g. `{ name: { $notStartsWith: 'John' } }` => `name NOT STARTS WITH "John"`
 - `$or`: Or, e.g. `{ $or: [{ name: 'John' }, { name: 'Doe' }] }` => `(name = "John" OR name = "Doe")`
 - `$and`: And, e.g. `{ $and: [{ age: { $gt: 18 } }, { isStudent: true }] }` => `age > 18 AND isStudent = true`
 - `$geoRadius`: Geo radius, e.g. `{ $geoRadius: { lat: 45.472735, lng: 9.184019, distanceInMeters: 2000 } }` => `_geoRadius(45.472735, 9.184019, 2000)`
@@ -174,6 +179,8 @@ supported operators:
 - `between`: Between, e.g. `.where('age', 'between', [18, 30])` => `age 18 TO 30`
 - `contains`: (Experimental) Contains, e.g. `.where('name', 'contains', 'John')` => `name CONTAINS "John"`
 - `notContains`: (Experimental) Not contains, e.g. `.where('name', 'notContains', 'John')` => `name NOT CONTAINS "John"`
+- `startsWith`: (Experimental) Starts with, e.g. `.where('name', 'startsWith', 'John')` => `name STARTS WITH "John"`
+- `notStartsWith`: (Experimental) Not starts with, e.g. `.where('name', 'notStartsWith', 'John')` => `name NOT STARTS WITH "John"`
 
 More examples can be found in the [tests](./__test__/filter-builder.test.js).
 
