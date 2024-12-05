@@ -27,7 +27,7 @@ export class MeiliSearchFilterBuilder<FilterableAttributes extends string> {
   where(
     lhs: FilterableAttributes,
     operator: FilterBuilderOperator,
-    rhs: BaseValueTypes,
+    rhs: BaseValueTypes | BaseValueTypes[],
   ): this;
   where(
     expressionFunction: (
@@ -42,7 +42,7 @@ interface ExpressionBuilder<FilterableAttributes extends string> {
   (
     lhs: FilterableAttributes,
     operator: FilterBuilderOperator,
-    rhs: BaseValueTypes,
+    rhs: BaseValueTypes | BaseValueTypes[],
   ): string;
   or(expressions: string[]): string;
   and(expressions: string[]): string;
