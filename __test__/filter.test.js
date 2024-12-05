@@ -1,3 +1,4 @@
+const { describe, it, expect } = require('@jest/globals');
 const { buildMeiliSearchFilter } = require('../src');
 
 describe('filter', () => {
@@ -110,6 +111,11 @@ describe('filter', () => {
       'name = "John" AND age = 18',
     );
 
+    // between
+    expect(buildMeiliSearchFilter({ age: { $between: [18, 30] } })).toBe(
+      'age 18 TO 30',
+    );
+
     // or
     expect(
       buildMeiliSearchFilter({ $or: [{ name: 'John' }, { age: 18 }] }),
@@ -180,6 +186,12 @@ describe('filter', () => {
     );
     expect(() => buildMeiliSearchFilter({ age: { $nin: 'a' } })).toThrow(
       '$nin must be an array',
+    );
+    expect(() => buildMeiliSearchFilter({ age: { $between: 1 } })).toThrow(
+      '$between must be an array',
+    );
+    expect(() => buildMeiliSearchFilter({ age: { $between: [1] } })).toThrow(
+      '$between must have two elements',
     );
     expect(() => buildMeiliSearchFilter({ $or: 'a' })).toThrow(
       '$or must be an array',

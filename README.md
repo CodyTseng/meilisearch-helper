@@ -55,6 +55,7 @@ Supported operators:
 - `$nin`: Not in, e.g. `{ name: { $nin: ['John', 'Doe'] } }` => `name NOT IN ["John", "Doe"]`
 - `$exists`: Exists, e.g. `{ name: { $exists: true } }` => `name EXISTS` or `{ name: { $exists: false } }` => `name NOT EXISTS`
 - `$empty`: Empty, e.g. `{ name: { $empty: true } }` => `name IS EMPTY` or `{ name: { $empty: false } }` => `name IS NOT EMPTY`
+- `$between`: Between, e.g. `{ age: { $between: [18, 30] } }` => `age 18 TO 30`
 - `$or`: Or, e.g. `{ $or: [{ name: 'John' }, { name: 'Doe' }] }` => `(name = "John" OR name = "Doe")`
 - `$and`: And, e.g. `{ $and: [{ age: { $gt: 18 } }, { isStudent: true }] }` => `age > 18 AND isStudent = true`
 - `$geoRadius`: Geo radius, e.g. `{ $geoRadius: { lat: 45.472735, lng: 9.184019, distanceInMeters: 2000 } }` => `_geoRadius(45.472735, 9.184019, 2000)`
@@ -123,7 +124,7 @@ console.log(filter);
 
 `eb` (expression builder): A function to build a simple filter expression.
 
-- `eb(lhs: FilterableAttributes, operator: FilterBuilderOperator, rhs: BaseValueTypes): string`: Build a simple filter expression.
+- `eb(lhs: FilterableAttributes, operator: FilterBuilderOperator, rhs: BaseValueTypes | BaseValueTypes[]): string`: Build a simple filter expression.
 
 ```typescript
 eb('age', '>', 18); // => age > 18
@@ -168,6 +169,7 @@ supported operators:
 - `nin`: Not in, e.g. `.where('name', 'nin', ['John', 'Doe'])` => `name NOT IN ["John", "Doe"]`
 - `exists`: Exists, e.g. `.where('name', 'exists', true)` => `name EXISTS` or `.where('name', 'exists', false)` => `name NOT EXISTS`
 - `empty`: Empty, e.g. `.where('name', 'empty', true)` => `name IS EMPTY` or `.where('name', 'empty', false)` => `name IS NOT EMPTY`
+- `between`: Between, e.g. `.where('age', 'between', [18, 30])` => `age 18 TO 30`
 
 More examples can be found in the [tests](./__test__/filter-builder.test.js).
 

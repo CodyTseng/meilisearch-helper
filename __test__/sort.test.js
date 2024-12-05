@@ -1,3 +1,4 @@
+const { describe, it, expect } = require('@jest/globals');
 const { buildMeiliSearchSort } = require('../src');
 
 describe('sort', () => {

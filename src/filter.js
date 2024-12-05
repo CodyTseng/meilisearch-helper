@@ -133,6 +133,9 @@ function formatComparisonCondition(field, operator, value) {
     case '$empty':
     case 'empty':
       return formatEmptyCondition(field, value);
+    case '$between':
+    case 'between':
+      return formatBetweenCondition(field, value);
     default:
       throw new Error(`Unsupported operator: ${operator}`);
   }
@@ -186,6 +189,14 @@ function formatExistsCondition(field, value) {
 
 function formatEmptyCondition(field, value) {
   return value ? `${field} IS EMPTY` : `${field} IS NOT EMPTY`;
+}
+
+function formatBetweenCondition(field, value) {
+  checkIsArray(value, '$between must be an array');
+  if (value.length !== 2) {
+    throw new Error('$between must have two elements');
+  }
+  return `${field} ${serializeValue(value[0])} TO ${serializeValue(value[1])}`;
 }
 
 function serializeValue(value) {

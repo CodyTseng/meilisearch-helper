@@ -1,3 +1,4 @@
+const { describe, it, expect } = require('@jest/globals');
 const { MeiliSearchFilterBuilder } = require('../src');
 
 describe('filter-builder', () => {
@@ -24,6 +25,9 @@ describe('filter-builder', () => {
     expect(builder.where('name', 'empty', true).build()).toBe('name IS EMPTY');
     expect(builder.where('name', 'empty', false).build()).toBe(
       'name IS NOT EMPTY',
+    );
+    expect(builder.where('age', 'between', [18, 30]).build()).toBe(
+      'age 18 TO 30',
     );
 
     // and
