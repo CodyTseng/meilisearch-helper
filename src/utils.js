@@ -22,6 +22,10 @@ function isFunction(fn) {
   return typeof fn === 'function';
 }
 
+function isString(str) {
+  return typeof str === 'string';
+}
+
 function checkIsObject(obj, errMsg) {
   if (isObject(obj)) {
     return;
@@ -29,22 +33,29 @@ function checkIsObject(obj, errMsg) {
   throw new Error(errMsg);
 }
 
-function checkIsArray(obj, errMsg) {
-  if (isArray(obj)) {
+function checkIsArray(arr, errMsg) {
+  if (isArray(arr)) {
     return;
   }
   throw new Error(errMsg);
 }
 
-function checkIsNumber(obj, errMsg) {
-  if (isNumber(obj)) {
+function checkIsNumber(num, errMsg) {
+  if (isNumber(num)) {
     return;
   }
   throw new Error(errMsg);
 }
 
-function checkIsNumberOrDate(obj, errMsg) {
-  if (isNumberOrDate(obj)) {
+function checkIsNumberOrDate(numOrDate, errMsg) {
+  if (isNumberOrDate(numOrDate)) {
+    return;
+  }
+  throw new Error(errMsg);
+}
+
+function checkIsString(str, errMsg) {
+  if (isString(str)) {
     return;
   }
   throw new Error(errMsg);
@@ -55,8 +66,10 @@ module.exports = {
   isArray,
   isDate,
   isFunction,
+  isString,
   checkIsObject,
   checkIsArray,
   checkIsNumber,
   checkIsNumberOrDate,
+  checkIsString,
 };

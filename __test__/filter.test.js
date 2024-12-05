@@ -116,6 +116,14 @@ describe('filter', () => {
       'age 18 TO 30',
     );
 
+    // contains
+    expect(buildMeiliSearchFilter({ name: { $contains: 'John' } })).toBe(
+      'name CONTAINS "John"',
+    );
+    expect(buildMeiliSearchFilter({ name: { $notContains: 'John' } })).toBe(
+      'name NOT CONTAINS "John"',
+    );
+
     // or
     expect(
       buildMeiliSearchFilter({ $or: [{ name: 'John' }, { age: 18 }] }),
@@ -192,6 +200,15 @@ describe('filter', () => {
     );
     expect(() => buildMeiliSearchFilter({ age: { $between: [1] } })).toThrow(
       '$between must have two elements',
+    );
+    expect(() =>
+      buildMeiliSearchFilter({ age: { $between: [1, 'a'] } }),
+    ).toThrow('$between must be an array of numbers or dates');
+    expect(() => buildMeiliSearchFilter({ name: { $contains: 1 } })).toThrow(
+      '$contains must be a string',
+    );
+    expect(() => buildMeiliSearchFilter({ name: { $notContains: 1 } })).toThrow(
+      '$notContains must be a string',
     );
     expect(() => buildMeiliSearchFilter({ $or: 'a' })).toThrow(
       '$or must be an array',

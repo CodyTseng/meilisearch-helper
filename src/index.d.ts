@@ -64,7 +64,9 @@ type FilterBuilderOperator =
   | 'nin'
   | 'exists'
   | 'empty'
-  | 'between';
+  | 'between'
+  | 'contains'
+  | 'notContains';
 
 type ComparisonCondition = {
   $eq?: BaseValueTypes;
@@ -78,6 +80,8 @@ type ComparisonCondition = {
   $exists?: boolean;
   $empty?: boolean;
   $between?: [from: ComparableValueTypes, to: ComparableValueTypes];
+  $contains?: string;
+  $notContains?: string;
 };
 
 type GeoCondition = {

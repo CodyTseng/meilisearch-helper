@@ -29,6 +29,12 @@ describe('filter-builder', () => {
     expect(builder.where('age', 'between', [18, 30]).build()).toBe(
       'age 18 TO 30',
     );
+    expect(builder.where('name', 'contains', 'John').build()).toBe(
+      'name CONTAINS "John"',
+    );
+    expect(builder.where('name', 'notContains', 'John').build()).toBe(
+      'name NOT CONTAINS "John"',
+    );
 
     // and
     expect(

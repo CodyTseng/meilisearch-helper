@@ -6,6 +6,7 @@ const {
   isDate,
   checkIsNumberOrDate,
   checkIsNumber,
+  checkIsString,
 } = require('./utils');
 
 function buildMeiliSearchFilter(filterQuery) {
@@ -136,6 +137,12 @@ function formatComparisonCondition(field, operator, value) {
     case '$between':
     case 'between':
       return formatBetweenCondition(field, value);
+    case '$contains':
+    case 'contains':
+      return formatContainsCondition(field, value);
+    case '$notContains':
+    case 'notContains':
+      return formatNotContainsCondition(field, value);
     default:
       throw new Error(`Unsupported operator: ${operator}`);
   }
@@ -196,7 +203,20 @@ function formatBetweenCondition(field, value) {
   if (value.length !== 2) {
     throw new Error('$between must have two elements');
   }
+  value.forEach((v) =>
+    checkIsNumberOrDate(v, '$between must be an array of numbers or dates'),
+  );
   return `${field} ${serializeValue(value[0])} TO ${serializeValue(value[1])}`;
+}
+
+function formatContainsCondition(field, value) {
+  checkIsString(value, '$contains must be a string');
+  return `${field} CONTAINS ${serializeValue(value)}`;
+}
+
+function formatNotContainsCondition(field, value) {
+  checkIsString(value, '$notContains must be a string');
+  return `${field} NOT CONTAINS ${serializeValue(value)}`;
 }
 
 function serializeValue(value) {
