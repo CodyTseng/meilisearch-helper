@@ -4,8 +4,6 @@ const {
   isObject,
   isArray,
   isDate,
-  isNumber,
-  isString,
   checkIsNumberOrDate,
   checkIsNumber,
   checkIsString,
