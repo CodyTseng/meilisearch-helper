@@ -112,7 +112,7 @@ type LogicalCondition<K extends string> = {
 };
 
 type BaseValueTypes = string | number | boolean | Date | null;
-type ComparableValueTypes = number | Date;
+type ComparableValueTypes = number | Date | string;
 
 type Condition = BaseValueTypes | BaseValueTypes[] | ComparisonCondition;
 
