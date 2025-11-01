@@ -4,6 +4,8 @@ const {
   isObject,
   isArray,
   isDate,
+  isNumber,
+  isString,
   checkIsNumberOrDate,
   checkIsNumber,
   checkIsString,
@@ -209,9 +211,11 @@ function formatBetweenCondition(field, value) {
   if (value.length !== 2) {
     throw new Error('$between must have two elements');
   }
-  value.forEach((v) =>
-    checkIsNumberOrDate(v, '$between must be an array of numbers or dates'),
-  );
+  const type = (val) => Object.prototype.toString.call(val).slice(8, -1);
+  const [from, to] = value;
+  if (type(from) !== type(to)) {
+    throw new Error('$between must be an array of numbers, dates or strings');
+  }
   return `${field} ${serializeValue(value[0])} TO ${serializeValue(value[1])}`;
 }
 

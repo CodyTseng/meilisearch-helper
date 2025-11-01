@@ -211,7 +211,7 @@ describe('filter', () => {
     );
     expect(() =>
       buildMeiliSearchFilter({ age: { $between: [1, 'a'] } }),
-    ).toThrow('$between must be an array of numbers or dates');
+    ).toThrow('$between must be an array of numbers, dates or strings');
     expect(() => buildMeiliSearchFilter({ name: { $contains: 1 } })).toThrow(
       '$contains must be a string',
     );
