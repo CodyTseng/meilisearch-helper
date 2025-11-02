@@ -47,8 +47,8 @@ function checkIsNumber(num, errMsg) {
   throw new Error(errMsg);
 }
 
-function checkIsNumberOrDate(numOrDate, errMsg) {
-  if (isNumberOrDate(numOrDate)) {
+function checkIsComparableType(val, errMsg) {
+  if (isNumberOrDate(val) || isString(val)) {
     return;
   }
   throw new Error(errMsg);
@@ -71,6 +71,6 @@ module.exports = {
   checkIsObject,
   checkIsArray,
   checkIsNumber,
-  checkIsNumberOrDate,
+  checkIsComparableType,
   checkIsString,
 };

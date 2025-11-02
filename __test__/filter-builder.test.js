@@ -34,6 +34,16 @@ describe('filter-builder', () => {
         .where('createdAt', 'between', ['2025-11-01', '2015-11-02'])
         .build(),
     ).toBe('createdAt "2025-11-01" TO "2015-11-02"');
+    expect(
+      builder
+        .where('createdAt', 'between', [
+          new Date('2025-11-01'),
+          new Date('2015-11-02').getTime(),
+        ])
+        .build(),
+    ).toBe(
+      `createdAt ${new Date('2025-11-01').getTime()} TO ${new Date('2015-11-02').getTime()}`,
+    );
     expect(builder.where('name', 'contains', 'John').build()).toBe(
       'name CONTAINS "John"',
     );

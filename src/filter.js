@@ -4,7 +4,7 @@ const {
   isObject,
   isArray,
   isDate,
-  checkIsNumberOrDate,
+  checkIsComparableType,
   checkIsNumber,
   checkIsString,
 } = require('./utils');
@@ -167,22 +167,22 @@ function formatNotEqualCondition(field, value) {
 }
 
 function formatGreaterThanCondition(field, value) {
-  checkIsNumberOrDate(value, '$gt must be a number or a date');
+  checkIsComparableType(value, '$gt must be a number, date or string');
   return `${field} > ${serializeValue(value)}`;
 }
 
 function formatGreaterThanOrEqualCondition(field, value) {
-  checkIsNumberOrDate(value, '$gte must be a number or a date');
+  checkIsComparableType(value, '$gte must be a number, date or string');
   return `${field} >= ${serializeValue(value)}`;
 }
 
 function formatLessThanCondition(field, value) {
-  checkIsNumberOrDate(value, '$lt must be a number or a date');
+  checkIsComparableType(value, '$lt must be a number, date or string');
   return `${field} < ${serializeValue(value)}`;
 }
 
 function formatLessThanOrEqualCondition(field, value) {
-  checkIsNumberOrDate(value, '$lte must be a number or a date');
+  checkIsComparableType(value, '$lte must be a number, date or string');
   return `${field} <= ${serializeValue(value)}`;
 }
 
@@ -209,12 +209,21 @@ function formatBetweenCondition(field, value) {
   if (value.length !== 2) {
     throw new Error('$between must have two elements');
   }
-  const type = (val) => Object.prototype.toString.call(val).slice(8, -1);
+  value.forEach((v) =>
+    checkIsComparableType(
+      v,
+      '$between must be an array of numbers, dates or strings',
+    ),
+  );
   const [from, to] = value;
-  if (type(from) !== type(to)) {
-    throw new Error('$between must be an array of numbers, dates or strings');
+  // Ensure type compatibility: strings must compare with strings,
+  // while numbers and dates can be compared together (dates are converted to numbers)
+  if ((typeof from === 'string') !== (typeof to === 'string')) {
+    throw new Error(
+      '$between values must be comparable: string with string, or number/date with number/date',
+    );
   }
-  return `${field} ${serializeValue(value[0])} TO ${serializeValue(value[1])}`;
+  return `${field} ${serializeValue(from)} TO ${serializeValue(to)}`;
 }
 
 function formatContainsCondition(field, value) {

@@ -55,6 +55,9 @@ describe('filter', () => {
         },
       }),
     ).toBe('age > 18');
+    expect(
+      buildMeiliSearchFilter({ release_date: { $gt: '2004-01-01' } }),
+    ).toBe('release_date > "2004-01-01"');
 
     // greater than or equal
     expect(buildMeiliSearchFilter({ age: { $gte: 18 } })).toBe('age >= 18');
@@ -191,8 +194,8 @@ describe('filter', () => {
     expect(() =>
       buildMeiliSearchFilter({ name: { $unsupported: 'John' } }),
     ).toThrow('Unsupported operator: $unsupported');
-    expect(() => buildMeiliSearchFilter({ age: { $gt: 'a' } })).toThrow(
-      '$gt must be a number or a date',
+    expect(() => buildMeiliSearchFilter({ age: { $gt: true } })).toThrow(
+      '$gt must be a number, date or string',
     );
     expect(() => buildMeiliSearchFilter(undefined)).toThrow(
       'Expected an object',
@@ -211,7 +214,9 @@ describe('filter', () => {
     );
     expect(() =>
       buildMeiliSearchFilter({ age: { $between: [1, 'a'] } }),
-    ).toThrow('$between must be an array of numbers, dates or strings');
+    ).toThrow(
+      '$between values must be comparable: string with string, or number/date with number/date',
+    );
     expect(() => buildMeiliSearchFilter({ name: { $contains: 1 } })).toThrow(
       '$contains must be a string',
     );
