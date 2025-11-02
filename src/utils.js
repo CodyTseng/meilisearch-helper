@@ -64,6 +64,7 @@ function checkIsString(str, errMsg) {
 module.exports = {
   isObject,
   isArray,
+  isNumber,
   isDate,
   isFunction,
   isString,

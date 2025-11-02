@@ -29,6 +29,11 @@ describe('filter-builder', () => {
     expect(builder.where('age', 'between', [18, 30]).build()).toBe(
       'age 18 TO 30',
     );
+    expect(
+      builder
+        .where('createdAt', 'between', ['2025-11-01', '2015-11-02'])
+        .build(),
+    ).toBe('createdAt "2025-11-01" TO "2015-11-02"');
     expect(builder.where('name', 'contains', 'John').build()).toBe(
       'name CONTAINS "John"',
     );
